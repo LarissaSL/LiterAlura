@@ -1,4 +1,7 @@
 package br.com.alura.literAlura.model;
+
+import java.text.Normalizer;
+
 public enum GeneroLivro {
     FICCAO("Ficção"),
     AVENTURA("Aventura"),
@@ -14,12 +17,22 @@ public enum GeneroLivro {
         return nome;
     }
 
-    public static GeneroLivro fromNome(String nome) {
+    public static GeneroLivro porNome(String nome) {
+        String nomeNormalizado = normalizarString(nome);
+
         for (GeneroLivro genero : GeneroLivro.values()) {
-            if (genero.getNome().equalsIgnoreCase(nome)) {
+            String nomeEnumNormalizado = normalizarString(genero.getNome());
+
+            if (nomeEnumNormalizado.equalsIgnoreCase(nomeNormalizado)) {
                 return genero;
             }
         }
         return null;
+    }
+
+    private static String normalizarString(String texto) {
+        return Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("[^\\p{ASCII}]", "")
+                .toLowerCase();
     }
 }

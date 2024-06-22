@@ -9,10 +9,7 @@ import br.com.alura.literAlura.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,8 +97,7 @@ public class LivroService {
     }
 
     public List<LivroDTO> listaDadosDisponiveisNoBanco() {
-        List<Livro> livros = repositorio.findAll();
-        return converteDados(livros);
+        return converteDados(repositorio.findAll());
     }
 
     private List<LivroDTO> converteDados(List<Livro> livros) {
@@ -124,5 +120,32 @@ public class LivroService {
         Map<String, String> mapaPoster = new HashMap<>();
         mapaPoster.put("image/jpeg", poster);
         return mapaPoster;
+    }
+
+    public List<LivroDTO> listaTop5() {
+        return converteDados(repositorio.findTop5ByOrderByNumeroDownloadsDesc());
+    }
+
+    public List<LivroDTO> listaPorGenero(String genero) {
+        GeneroLivro generoAPesquisar = GeneroLivro.porNome(genero);
+        if (generoAPesquisar == null) {
+            return new ArrayList<>();
+        }
+        return converteDados(repositorio.findByGeneroIgnoreCase(generoAPesquisar.getNome()));
+    }
+
+
+    public List<LivroDTO> listaObrasDoAutor(String autor) {
+        autor = autor.trim();
+        return converteDados(repositorio.findByAutorContainingIgnoreCase(autor));
+    }
+
+    public List<LivroDTO> listaObra(String titulo) {
+        return converteDados(repositorio.buscarPorTitulo(titulo));
+    }
+
+
+    public List<LivroDTO> listaObraDoIdioma(String idioma) {
+        return converteDados(repositorio.buscarPorIdioma(idioma));
     }
 }
