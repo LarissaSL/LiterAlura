@@ -2,7 +2,18 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarLivros();
     document.getElementById('filtro-form').addEventListener('submit', event => {
         event.preventDefault();
-        filtrarLivros();
+        const genero = document.getElementById('genero').value;
+        const autor = document.getElementById('autor').value;
+        const idioma = document.getElementById('idioma').value;
+        const titulo = document.getElementById('titulo').value;
+
+        const numFiltrosSelecionados = [genero, autor, idioma, titulo].filter(value => value !== '').length;
+
+        if (numFiltrosSelecionados > 1) {
+            alert('Por favor, selecione apenas um filtro por vez.');
+        } else {
+            filtrarLivros(genero, autor, idioma, titulo);
+        }
     });
 });
 
@@ -18,12 +29,7 @@ function carregarLivros() {
         .catch(error => console.error('Erro ao carregar livros:', error));
 }
 
-function filtrarLivros() {
-    const genero = document.getElementById('genero').value;
-    const autor = document.getElementById('autor').value;
-    const idioma = document.getElementById('idioma').value;
-    const titulo = document.getElementById('titulo').value;
-
+function filtrarLivros(genero, autor, idioma, titulo) {
     const livrosContainer = document.getElementById('livrosContainer');
     livrosContainer.innerHTML = '';
 
@@ -40,12 +46,15 @@ function filtrarLivros() {
 
 function exibirLivros(data, tituloSecao) {
     const livrosContainer = document.getElementById('livrosContainer');
+
+    const tituloContainer = document.createElement('h2');
+    tituloContainer.innerHTML = `<i class="ph ph-books"></i> ${tituloSecao}`;
+
     const secaoLivros = document.createElement('div');
     secaoLivros.classList.add('secao_livros');
-    secaoLivros.innerHTML = `<h2>${tituloSecao}</h2>`;
 
     if (data.length === 0) {
-        secaoLivros.innerHTML += '<p class="nenhum-livro">Nenhum livro encontrado.</p>';
+        secaoLivros.innerHTML = '<p class="nenhum-livro">Nenhum livro encontrado.</p>';
     } else {
         data.forEach(livro => {
             const livroDiv = document.createElement('div');
@@ -53,15 +62,19 @@ function exibirLivros(data, tituloSecao) {
 
             const tituloP = document.createElement('p');
             tituloP.classList.add('livro_titulo');
-            tituloP.textContent = `Título: ${livro.resultados[0].titulo}`;
+            tituloP.textContent = `${livro.resultados[0].titulo}`;
 
             const autorP = document.createElement('p');
             autorP.classList.add('livro_autor');
-            autorP.textContent = `Autor: ${livro.resultados[0].autores[0].nome}`;
+            autorP.textContent = `${livro.resultados[0].autores[0].nome}`;
+
+            const downloadsP = document.createElement('p');
+            downloadsP.classList.add('livro_downloads');
+            downloadsP.innerHTML = `<span><i class="ph ph-download-simple"></i></span> ${livro.resultados[0].numeroDownloads}`;
 
             const generoP = document.createElement('p');
             generoP.classList.add('livro_genero', livro.resultados[0].generos[0].replace(/\s+/g, '-').toLowerCase());
-            generoP.textContent = `Gênero: ${livro.resultados[0].generos[0]}`;
+            generoP.textContent = `${livro.resultados[0].generos[0]}`;
 
             const imagem = document.createElement('img');
             imagem.classList.add('livro_imagem');
@@ -70,6 +83,7 @@ function exibirLivros(data, tituloSecao) {
 
             livroDiv.appendChild(tituloP);
             livroDiv.appendChild(autorP);
+            livroDiv.appendChild(downloadsP);
             livroDiv.appendChild(generoP);
             livroDiv.appendChild(imagem);
 
@@ -77,5 +91,6 @@ function exibirLivros(data, tituloSecao) {
         });
     }
 
+    livrosContainer.appendChild(tituloContainer);
     livrosContainer.appendChild(secaoLivros);
 }

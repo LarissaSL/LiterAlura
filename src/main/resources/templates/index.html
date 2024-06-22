@@ -4,28 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LiterAlura</title>
+
+    <link rel="icon" href="/img/icon_livro.png" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
           integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/css/global.css">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script defer src="/js/literAlura.js"></script>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <!-- Navbar content -->
-    </nav>
+    <h1><span class="fonte-challenger">Challenger</span>
+        <span class="fonte-literAlura">LiterAlura</span></h1>
+    <div class="container">
+        <div class="inicio">
+            <p class="inicio_descricao">Explore o LiterAlura, um catálogo de livros com novas histórias e conhecimentos.</p>
+        </div>
+        <img class="inicio_img" src="/img/livros.png" alt="livros" >
+    </div>
 </header>
 <main class="container-principal">
-    <h1>Lista de Livros Disponíveis</h1>
-
     <form id="filtro-form">
         <div class="form-group">
-            <label for="genero">Gênero:</label>
+            <label for="genero">Gênero</label>
             <select id="genero" class="form-control">
-                <option value="">Selecionar Gênero</option>
+                <option value="">Selecione um Gênero</option>
                 <option value="Drama">Drama</option>
                 <option value="Aventura">Aventura</option>
                 <option value="Ficção">Ficção</option>
@@ -33,30 +40,40 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="autor">Autor:</label>
+            <label for="autor">Autor</label>
             <input type="text" id="autor" class="form-control">
         </div>
         <div class="form-group">
-            <label for="idioma">Idioma:</label>
+            <label for="idioma">Idioma</label>
             <select id="idioma" class="form-control">
-                <option value="">Selecionar Idioma</option>
-                <option value="Inglês">Inglês</option>
-                <option value="Francês">Francês</option>
-                <option value="Espanhol">Espanhol</option>
-                <option value="Português">Português</option>
+                <option value="">Selecionar um Idioma</option>
+                <option value="EN">Inglês</option>
+                <option value="FR">Francês</option>
+                <option value="ES">Espanhol</option>
+                <option value="PT">Português</option>
             </select>
         </div>
         <div class="form-group">
-            <label for="titulo">Título:</label>
+            <label for="titulo">Título</label>
             <input type="text" id="titulo" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary">Filtrar</button>
+        <button type="submit" class="btn_filtrar">Filtrar</button>
     </form>
+
 
     <div id="livrosContainer"></div>
 </main>
 <footer class="rodape">
-    <!-- Footer content -->
+    <div class="rodape_conteudo">
+        <a href="https://www.linkedin.com/in/larissasilvasl" target="_blank" rel="noopener noreferrer">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linkedin/linkedin-original.svg" alt="LinkedIn">
+        </a>
+        <a href="https://github.com/larissaSL" target="_blank" rel="noopener noreferrer">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub">
+        </a>
+
+    </div>
+    <p>Feito por <strong>Soolari <i class="ph ph-smiley"></i></strong> | "Ao infinito e além"</p>
 </footer>
 </body>
 </html>

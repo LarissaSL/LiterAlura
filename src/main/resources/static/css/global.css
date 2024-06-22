@@ -1,3 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Playwrite+US+Trad:wght@100..400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --cor-principal: #2E8AA1;
+    --cor-secundaria: #FCBA4C;
+    --cor-tercearia: #363233;
+    --cor-quartenaria: #F03E62;
+    --cor-card: #fff;
+
+    --drama: #6daecc;
+    --aventura: #92c451;
+    --ficcao: #d38450;
+    --outro: #aaa194;
+}
+
 body {
-    background-color: red;
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--cor-principal);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.fonte-challenger {
+    font-family: "Playwrite US Trad", cursive;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.fonte-literAlura {
+    font-family: "Montserrat", sans-serif;
+    font-weight: bold;
+}
+
+.container {
+    background-color: var(--cor-secundaria);
+    position: relative;
+    padding: 20px;
+    height: 180px;
+}
+
+.inicio {
+    flex: 1;
+    z-index: 1;
+    text-align: center;
+}
+
+.inicio_descricao {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.inicio_img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 250px;
+    height: auto;
+
+}
+
+h1 {
+    text-align: center;
+}
+
+#filtro-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 80px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.form-group select,
+.form-group input,
+.btn_filtrar {
+    border-radius: 10px;
+    border: none;
+    padding: 1rem;
+}
+
+.btn_filtrar {
+    width: 150px;
+    margin-top: 1rem ;
+    font-weight: 700;
+    background-color: var(--cor-secundaria);
+    color: var(--cor-tercearia);
+}
+
+.btn_filtrar:hover {
+    background-color: var(--cor-tercearia);
+    color: var(--cor-card);
+    cursor: pointer;
+}
+
+h2 {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+
+.secao_livros {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    margin-top: 3rem;
+    gap: 2rem;
+}
+
+
+.livro {
+    background-color: var(--cor-card);
+    color: var(--cor-tercearia);
+    padding: 20px;
+    margin: 10px;
+    width: 250px;
+    height: 550px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px;
+}
+
+.livro_titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.livro_autor {
+    font-weight: 500;
+    font-style: italic;
+}
+
+
+.livro_genero {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin: 30px 0 15px;
+    font-weight: 500;
+    font-size: .9rem;
+}
+
+.drama { background-color: var(--drama) }
+.aventura { background-color: var(--aventura) }
+.ficção { background-color: var(--ficcao) }
+.outro { background-color: var(--outro) }
+.livro_autor {
+    margin-bottom: 10px;
+}
+
+
+.livro_imagem {
+    max-width: 100%;
+    height: 305px;
+    border: 2px solid var(--cor-tercearia);
+    border-radius: 5px;
+
+}
+
+.rodape {
+    background-color: var(--cor-card);
+    padding: 20px;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.rodape_conteudo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.rodape_conteudo a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.rodape_conteudo img {
+    width: 30px;
+    height: 30px;
+}
+
+@media(min-width: 768px){
+    .container {
+        height: 190px;
+    }
+
+    .inicio_img {
+        max-width: 330px;
+    }
+
+    .inicio_descricao {
+        margin-top: 1rem;
+    }
+
+    #filtro-form {
+        margin-top: 100px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .secao_livros {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-start;
+        justify-content: center;
+        margin-top: 3rem;
+        gap: 2rem;
+    }
+
+    h2 {
+        margin: 4rem 0;
+    }
 }
