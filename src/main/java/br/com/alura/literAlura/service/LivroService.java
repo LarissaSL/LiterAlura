@@ -1,16 +1,18 @@
 package br.com.alura.literAlura.service;
 
+import br.com.alura.literAlura.dto.AutorDTO;
 import br.com.alura.literAlura.dto.LivroDTO;
+import br.com.alura.literAlura.dto.ResultsDTO;
 import br.com.alura.literAlura.model.Livro;
 import br.com.alura.literAlura.model.GeneroLivro;
 import br.com.alura.literAlura.repository.LivroRepository;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,21 +22,18 @@ public class LivroService {
     private LivroRepository repositorio;
 
     @Autowired
+    private ConverteDados conversor;
+
+    @Autowired
     private ConsumoApi consumoApi;
 
     private static final String API_URL = "https://gutendex.com/books/?search=";
-
-    private List<LivroDTO> converteDados(List<Livro> livros) {
-        return livros.stream()
-                .map(l -> new LivroDTO(l.getTitulo(), l.getAutor(), l.getIdioma(), l.getNumeroDownloads(), l.getPoster(), l.getGenero()))
-                .collect(Collectors.toList());
-    }
 
     public List<LivroDTO> popularBanco() {
         if (!tabelaEstaPopulada()) {
             List<LivroDTO> livrosInseridos = new ArrayList<>();
 
-            String[] livrosParaBuscar = {
+            String[] titulosParaBuscar = {
                     "Pride and Prejudice",
                     "Romeo and Juliet",
                     "Moby Dick",
@@ -48,48 +47,31 @@ public class LivroService {
                     "Le comte de Monte-Cristo, Tome I",
                     "Don Quijote",
                     "La Odisea",
-                    "Memorias Posthumas de Braz Cubas",
+                    "Memorias Posthumas de Braz Cubas"
             };
 
-            for (String titulo : livrosParaBuscar) {
+            for (String titulo : titulosParaBuscar) {
                 try {
                     String tituloFormatado = titulo.replace(" ", "+");
                     String url = API_URL + tituloFormatado;
-                    String json = consumoApi.obterDados(url);
+                    String json = consumoApi.consumir(url);
 
-                    ObjectMapper mapper = new ObjectMapper();
-                    JsonNode root = mapper.readTree(json);
+                    LivroDTO livroDTO = conversor.obterDados(json, LivroDTO.class);
 
-                    JsonNode resultsNode = root.get("results");
-                    if (resultsNode != null && resultsNode.isArray() && resultsNode.size() > 0) {
-                        JsonNode primeiroLivroNode = resultsNode.get(0);
+                    ResultsDTO resultado = livroDTO.resultados().get(0);
 
-                        String tituloLivro = primeiroLivroNode.get("title").asText();
-                        String nomeAutor = primeiroLivroNode.get("authors").get(0).get("name").asText();
-                        String idioma = primeiroLivroNode.get("languages").get(0).asText().toUpperCase();
-                        int numeroDownloads = primeiroLivroNode.get("download_count").asInt();
+                    String tituloLivro = resultado.titulo();
+                    String nomeAutor = resultado.autores().get(0).nome();
+                    String idioma = resultado.idiomas().get(0).toUpperCase();
+                    int numeroDownloads = resultado.numeroDownloads();
+                    String poster = resultado.formatos().get("image/jpeg");
+                    String genero = resultado.generos().isEmpty() ? "Outro" : mapearGenero(resultado.generos().get(0));
 
-                        String poster = null;
-                        JsonNode formatos = primeiroLivroNode.get("formats");
-                        if (formatos != null && formatos.has("image/jpeg")) {
-                            poster = formatos.get("image/jpeg").asText();
-                        }
+                    Livro livro = new Livro(tituloLivro, nomeAutor, idioma, numeroDownloads, poster, genero);
+                    repositorio.save(livro);
 
-                        String genero = "Indefinido";
-                        JsonNode generos = primeiroLivroNode.get("subjects");
-                        if (generos != null && generos.isArray() && generos.size() > 0) {
-                            JsonNode primeiroGenero = generos.get(0);
-                            if (primeiroGenero != null) {
-                                genero = primeiroGenero.asText();
-                                genero = mapearGenero(genero);
-                            }
-                        }
-
-                        Livro livro = new Livro(tituloLivro, nomeAutor, idioma, numeroDownloads, poster, genero);
-                        repositorio.save(livro);
-                        livrosInseridos.add(new LivroDTO(tituloLivro, nomeAutor, idioma, numeroDownloads, poster, genero));
-                        System.out.println("Livro salvo no banco: " + livro.toString());
-                    }
+                    livrosInseridos.add(new LivroDTO(List.of(resultado)));
+                    System.out.println("Livro salvo no banco: " + livro.toString());
                 } catch (Exception e) {
                     System.out.println("Erro ao inserir o Título: " + titulo);
                     e.printStackTrace();
@@ -118,7 +100,29 @@ public class LivroService {
     }
 
     public List<LivroDTO> listaDadosDisponiveisNoBanco() {
-        return converteDados(repositorio.findAll());
+        List<Livro> livros = repositorio.findAll();
+        return converteDados(livros);
     }
 
+    private List<LivroDTO> converteDados(List<Livro> livros) {
+        return livros.stream()
+                .map(livro -> {
+                    ResultsDTO resultsDTO = new ResultsDTO(
+                            livro.getTitulo(),
+                            List.of(new AutorDTO(livro.getAutor())),
+                            List.of(livro.getIdioma()),
+                            livro.getNumeroDownloads(),
+                            obterMapaPoster(livro.getPoster()),
+                            List.of(livro.getGenero())
+                    );
+                    return new LivroDTO(List.of(resultsDTO));
+                })
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, String> obterMapaPoster(String poster) {
+        Map<String, String> mapaPoster = new HashMap<>();
+        mapaPoster.put("image/jpeg", poster);
+        return mapaPoster;
+    }
 }
