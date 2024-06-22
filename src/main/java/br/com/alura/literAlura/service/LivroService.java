@@ -33,6 +33,8 @@ public class LivroService {
             String[] titulosParaBuscar = {
                     "Pride and Prejudice",
                     "Romeo and Juliet",
+                    "Peter Pan",
+                    "Wuthering Heights",
                     "Moby Dick",
                     "Frankenstein",
                     "Alice's Adventures in Wonderland",

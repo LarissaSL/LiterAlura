@@ -5,7 +5,8 @@ import java.text.Normalizer;
 public enum GeneroLivro {
     FICCAO("Ficção"),
     AVENTURA("Aventura"),
-    DRAMA("Drama");
+    DRAMA("Drama"),
+    OUTRO("Outro");
 
     private final String nome;
 
