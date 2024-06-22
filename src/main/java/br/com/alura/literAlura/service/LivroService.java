@@ -1,5 +1,6 @@
 package br.com.alura.literAlura.service;
 
+import br.com.alura.literAlura.dto.LivroDTO;
 import br.com.alura.literAlura.model.Livro;
 import br.com.alura.literAlura.model.GeneroLivro;
 import br.com.alura.literAlura.repository.LivroRepository;
@@ -23,9 +24,15 @@ public class LivroService {
 
     private static final String API_URL = "https://gutendex.com/books/?search=";
 
-    public List<String> popularBanco() {
+    private List<LivroDTO> converteDados(List<Livro> livros) {
+        return livros.stream()
+                .map(l -> new LivroDTO(l.getTitulo(), l.getAutor(), l.getIdioma(), l.getNumeroDownloads(), l.getPoster(), l.getGenero()))
+                .collect(Collectors.toList());
+    }
+
+    public List<LivroDTO> popularBanco() {
         if (!tabelaEstaPopulada()) {
-            List<String> titulosInseridos = new ArrayList<>();
+            List<LivroDTO> livrosInseridos = new ArrayList<>();
 
             String[] livrosParaBuscar = {
                     "Pride and Prejudice",
@@ -80,7 +87,7 @@ public class LivroService {
 
                         Livro livro = new Livro(tituloLivro, nomeAutor, idioma, numeroDownloads, poster, genero);
                         repositorio.save(livro);
-                        titulosInseridos.add(titulo);
+                        livrosInseridos.add(new LivroDTO(tituloLivro, nomeAutor, idioma, numeroDownloads, poster, genero));
                         System.out.println("Livro salvo no banco: " + livro.toString());
                     }
                 } catch (Exception e) {
@@ -88,7 +95,7 @@ public class LivroService {
                     e.printStackTrace();
                 }
             }
-            return titulosInseridos;
+            return livrosInseridos;
         } else {
             return listaDadosDisponiveisNoBanco();
         }
@@ -110,14 +117,8 @@ public class LivroService {
         }
     }
 
-    public List<String> listaDadosDisponiveisNoBanco() {
-        List<Livro> livros = repositorio.findAll();
-
-        return livros.stream()
-                .map(livro -> String.format("Título: %s, Autor: %s, Idioma: %s, Downloads: %d, Poster: %s, Gênero: %s",
-                        livro.getTitulo(), livro.getAutor(), livro.getIdioma(), livro.getNumeroDownloads(),
-                        livro.getPoster(), livro.getGenero()))
-                .collect(Collectors.toList());
+    public List<LivroDTO> listaDadosDisponiveisNoBanco() {
+        return converteDados(repositorio.findAll());
     }
 
 }
