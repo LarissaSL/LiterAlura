@@ -2,7 +2,7 @@
 
 O projeto LiterAlura é uma aplicação web que permite aos usuários buscar e visualizar livros de diversas categorias, autores e idiomas, utilizando dados da API do Gutendex. Abaixo estão os tópicos detalhados sobre como configurar e utilizar a aplicação.
 
-<img src="https://github.com/LarissaSL/LiterAlura/assets/112571317/4b78be83-1347-4aab-980a-c119885c0eeb" width="1280">
+<img src="https://github.com/LarissaSL/LiterAlura/assets/112571317/779e8e81-ba11-4241-8625-6a750be5b118" width="1000">
 
 ## 📌 Primeiros Passos
 
